@@ -1,0 +1,64 @@
+Joona ja Lauri - Veji Multimedia Database
+
+Ohjelman kuvaus
+- kyseessä on oma aihe, joka vastaa laajudeltaan muita harjoitustyöaiheita
+- ohjelma toimii Googlen palvelimella ja hyödyntää Pythonin lisäksi seuraavia
+  teknologioita: HTML, XML, Javascript, CSS
+- ohjelma on käytettävissä mistä päin maailmaa tahansa
+- ohjelman tarkoitus on toimia käyttäjilleen ensisijaisesti elokuvatietokantana,
+  jonne voi lisätä kaikki ne elokuvat, jotka omistaa tai on joskus nähnyt
+
+Ohjelman käyttöohje
+- kirjaudu sisään http://veji.appspot.com/ omalla Google ID:lläsi
+- voit lisätä elokuvia kohdasta "Add a new movie"
+- elokuvan poistaminen omasta listasta onnistuu valitsemalla elokuvan (klikkaa
+  valintaboksia) ja valitsemalla "Delete"
+- elokuvien järjestäminen eri kriteerien mukaan implementoidaan, jos jaksetaan
+
+Ratkaisutapa
+- elokuvien tiedot haetaan suoraan IMDB:stä
+- IMDB:stä saatu data parsitaan tietokantaan tallennettavaksi rakenteeksi
+- kaikkien elokuvien kaikki tiedot poster-kuvaa lukuunottamatta sijaitsevat
+  Google App Enginen tarjoamassa Datastore-tietokantapilvessä
+  
+Ohjelman rakenne
+- aika monta
+- tekee juttuja
+
+Tässä kuvataan ohjelman käyttämät luokat, niiden metodit ja funktiot. 
+Metodeista ja funktioista selitetään niiden tehtävä (mitä metodi tekee), 
+kuvataan parametrit ja paluuarvon merkitys.
+
+Arvio projektityöstä
+- kerrankin tehtiin jotain hyödyllistä ohjelmointikurssilla
+- aikataulu oli tiukka, mutta saatiin tää valmiiksi
+- ohjelman erityinen ansio on se, että se on toteutettu olemassa olevan 
+  palvelun päälle ja että se on täysin käytettävissä internet-yhteyden yli
+- ohjelma käyttää lukuisia eri tekniikoita kokonaisuuden aikaansaamiseksi
+
+Tässä voi arvioida sekä omaa ohjelmaa (erityisesti ohjelman erityiset ansiot on 
+syytä tuoda tässä esille) että aihetta ja projektityön tekemistä yleisesti.
+
+Lähdeviitteet
+- Pythonilla tehty Tasklist
+- Perl-skripti IMDB-tiedon parsimiseen
+- Google App Engine API:t
+
+Tässä mainitaan käytetyt lähdeviitteet. Jos ohjelmaan on lainattu jotain 
+valmista koodia, lähde on mainittava sekä tässä että merkittävä selvästi 
+kommentein myös itse ohjelmassa.
+
+Ajoesimerkit
+- esimerkkiajon tekeminen ei ohjelman luonteen kannalta ole mielekestä
+
+Tässä esitetään muutama esimerkkiajo ohjelman suorituksesta. Esimerkkiajoon 
+liitetään myös listaukset esimerkkiajossa käytetyistä tiedostoista.
+
+Parannusehdotuksia
+- tehokkuus huono
+-- jos uusi elokuva jo listassa/db:ssä, ei lähdetä etsimään sitä imdb:stä
+-- "reaaliaikainen" haku vain jo löydettyihin tuloksiin (käyttäjän
+   kirjoittaessa elokuvahakuun haetaan jo ensimmäisellä haulla löydetyistä
+   tuloksista eikä tehdä aina uutta hakua imdb:hen)
+- oman databasen kentät voisivat olla myös jotain muuta kuin stringejä
+- interfacet olis kivoja, mutta python ei tue niitä  

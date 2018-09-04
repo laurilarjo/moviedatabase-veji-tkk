@@ -1,0 +1,265 @@
+{% extends "base.html" %}
+
+{% block head %}
+  <script type="text/javascript">
+  
+function updateContent(elementId, filePath, parameters) {
+	if (elementId && filePath) {
+		new Ajax.Request(filePath, {
+		  method: 'post',
+		  parameters: parameters ?  parameters : '',
+		  onSuccess: function(transport) {
+		    if($(elementId))
+		    	$(elementId).update(transport.responseText);
+		  }
+		});
+	}
+}
+             
+  function addNewMovie() {
+    var form = document.getElementById("newmovieform");
+    var dialog = document.getElementById("newmovieform_dialog");
+    DialogBox.instance().show(dialog, function() {
+      form["moviequery"].focus();
+    });
+  }
+
+	function addNewGame() {
+	    var dialog = document.getElementById("newgameform_dialog");
+	    DialogBox.instance().show(dialog, function() {});
+	}
+
+	function addNewAlbum() {
+	    var dialog = document.getElementById("newalbumform_dialog");
+	    DialogBox.instance().show(dialog, function() {});
+	}
+
+	function showMovieDetails(movieid) {
+	    var dialog = document.getElementById("moviedetails_dialog");
+	    DialogBox.instance().show(dialog, function() {});
+	    updateContent("moviedetails_name", "/showmoviedetails.do", 'movieid=' + movieid + '&getelement=title');
+	    updateContent("moviedetails_year", "/showmoviedetails.do", 'movieid=' + movieid + '&getelement=year');
+	    updateContent("moviedetails_director", "/showmoviedetails.do", 'movieid=' + movieid + '&getelement=director');
+	    updateContent("moviedetails_userrating", "/showmoviedetails.do", 'movieid=' + movieid + '&getelement=userRating');
+	    updateContent("moviedetails_movierating", "/showmoviedetails.do", 'movieid=' + movieid + '&getelement=movieRating');
+	    updateContent("moviedetails_runtime", "/showmoviedetails.do", 'movieid=' + movieid + '&getelement=runtime');
+	    updateContent("moviedetails_cast", "/showmoviedetails.do", 'movieid=' + movieid + '&getelement=cast');
+	    updateContent("moviedetails_genres", "/showmoviedetails.do", 'movieid=' + movieid + '&getelement=genres');
+	    updateContent("moviedetails_countries", "/showmoviedetails.do", 'movieid=' + movieid + '&getelement=countries');
+	    updateContent("moviedetails_plot", "/showmoviedetails.do", 'movieid=' + movieid + '&getelement=plot');
+	    updateContent("moviedetails_posterimage", "/showmoviedetails.do", 'movieid=' + movieid + '&getelement=posterUrl');
+	}
+
+  function getMovieSelectOptions(e) {
+	var userInput = document.getElementById('moviequery').value;
+	// if user input is too short, keep the options-list empty and hidden
+	if (userInput.length < 3) {
+		var options =  document.forms['newmovieform'].movieid.options.length;
+		for (var i = options; i >= 0; i--) { 
+			document.forms['newmovieform'].movieid.options[i] = null; 
+		}
+		 document.forms['newmovieform'].movieid.hide();
+		return;
+	  }
+	  else {
+		  document.forms['newmovieform'].movieid.show();
+		  updateContent("movieoptions", "/querymovies.do", "query="+userInput);
+		
+	 }
+	
+  }
+
+  function selectLists(all) {
+    var inputs = document.getElementsByTagName("input");
+    for (var i = 0; i < inputs.length; i++) {
+      var input = inputs[i];
+      if (input.type == "checkbox" && input.className == "listcheckbox") {
+        var id = input.id.substring(8);
+        var row = document.getElementById("row" + id);
+        input.checked = all;
+        updateHighlight(input, row);
+      }
+    }
+  }
+
+  function updateHighlight(checkbox, row) {
+    if (checkbox.checked) {
+      row.style.backgroundColor = "#fff1cc";
+    } else {
+      row.style.backgroundColor = "#E6E6E6";
+    }
+  }
+
+  //]]>
+  </script>
+{% endblock %}
+
+{% block body %}
+  <form action="/mainformaction.do" method="post">
+    <div class="inbox">
+      <input type="hidden" name="next" value="{{ request.uri|escape }}"/>
+      <div class="menu">
+      	<span class="name">Add:</span>
+        <span class="item"><a href="javascript:addNewMovie()">New movie</a></span>
+        <span class="item"><a href="javascript:addNewGame()">New game</a></span>
+        <span class="item"><a href="javascript:addNewAlbum()">New music album</a></span>
+      </div>
+      <div class="buttons top">
+        <div class="left corner"></div>
+        <div class="right corner"></div>
+        <span class="button"><input type="submit" name="action" value="Delete" onclick="return confirm('Are you sure you want to permanently delete the selected task lists?')"/></span>
+      </div>
+      <div class="table">
+        <table>
+          <tr>
+            <th class="checkbox"><input type="checkbox" onclick="selectLists(this.checked)"/></th>
+            <th>Movie Title</th>
+            <th>Director(s)</th>
+            <th>Release Year</th>
+          </tr>
+          {% for entry in movies %}
+            <tr id="row{{ forloop.counter }}">
+              <td class="checkbox"><input class="listcheckbox" type="checkbox" name="list" value="{{ entry.id }}" id="checkbox{{ forloop.counter }}" onclick="updateHighlight(this, document.getElementById('row{{ forloop.counter }}'))"/></td>
+              
+              <td class="main">
+              	<div class="name"><a href="javascript:showMovieDetails('{{ entry.id }}')">
+              		{{ entry.title }}</a>
+              	</div>
+              </td>
+              <td class="director">{{ entry.director }}</td>
+              <td class="year">{{ entry.year }}</td>
+            </tr>
+          {% endfor %}
+        </table>
+        
+      </div>
+      <div class="buttons bottom">
+        <div class="left corner"></div>
+        <div class="right corner"></div>
+        <span class="button"><input type="submit" name="action" value="Delete"/></span>
+      </div>
+    </div>
+  </form>
+
+  <div id="newmovieform_dialog" class="dialog" style="display: none">
+    <div class="title">Add new movie to your library</div>
+    <div class="content">
+      <form action="/addnewmovie.do" method="post" id="newmovieform">
+        <div class="form">
+        <div class="field">    			
+    			<div class="name">Movie title</div>
+        		<div class="value"><input id="moviequery" name="query" type="text" size="70" onkeyup="getMovieSelectOptions(this)"/></div>    		
+			</div>
+          <div class="field">
+          	<div class="name">
+          	<div class="value">
+          		<select id="movieoptions" multiple="yes" name="movieid" style="display:none">
+          		</select>          	
+          	</div>
+          </div>
+          </div>
+          <div class="buttons">
+            <span class="button"><input type="button" value="Cancel" onclick="DialogBox.instance().close()"/></span>
+            <span class="button"><input type="submit" name="action" value="Add to my list"/></span>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <div id="newgameform_dialog" class="dialog" style="display: none">
+  	<div class="title">Add new game to your library</div>
+  	<div class="content">
+  		<div class="field">
+  			<div class="name">This feature has not been implemented yet. Sorry for your inconvenience. -Gravity corp. orp.</div>
+  		</div>
+  		<br/>
+  		<div class="buttons">
+  			<span class="button"><input type="button" value="Cancel" onclick="DialogBox.instance().close()"></span>
+  		</div>
+  	</div>
+  </div>
+  
+  <div id="newalbumform_dialog" class="dialog" style="display: none">
+    <div class="title">Add new music album to your library</div>
+  	  <div class="content">
+  		<div class="field">
+  			<div class="name">This feature has not been implemented yet. Sorry for your inconvenience. -Gravity corp. orp.</div>
+  		</div>
+  		<br/>
+  		<div class="buttons">
+  			<span class="button"><input type="button" value="Cancel" onclick="DialogBox.instance().close()"></span>
+  		</div>
+  	 </div>
+  </div>
+
+  <div id="moviedetails_dialog" class="dialog" style="display: none; width: 600px">
+  	<div class="title">Movie details</div>
+  	<div id="moviedetails_contents" class="content">
+  		<table align="center">
+  			<tr>
+  				<td>
+  					<table>
+  						<tr>
+ 							<td><b><em>Title</em></b></td>
+			 				<td><div id="moviedetails_name" class="name"></div></td>
+			 			</tr>
+			 			<tr>
+			 				<td><b><em>Year</em></b></td>
+			 				<td><div id="moviedetails_year" class="year"></div></td>
+			 			</tr>
+			 			<tr>
+			 				<td><b><em>User rating</em></b></td>
+			 				<td><div id="moviedetails_userrating" class="userrating"></div></td>
+			 			</tr>
+			 			<tr>
+			 				<td><b><em>Runtime</em></b></td>
+			  				<td><div id="moviedetails_runtime" class="runtime"></div></td>
+			 			</tr>
+			  			<tr>
+			 				<td><b><em>Director</em></b></td>
+			  				<td><div id="moviedetails_director" class="director"></div></td>
+			  			</tr>
+			 			<tr>
+			 				<td><b><em>Movie rating</em></b></td>
+			 				<td><div id="moviedetails_movierating" class="movierating"></div></td>
+			 			</tr>
+			 			<tr>
+			 				<td><b><em>Cast</em></b></td>
+			 				<td><div id="moviedetails_cast" class="cast"></div></td>
+			 			</tr>
+			 			<tr>
+			 				<td><b><em>Genres</em></b></td>
+			 				<td><div id="moviedetails_genres" class="genres"></div></td>
+			 			</tr>
+			 			<tr>
+			 				<td><b><em>Countries</em></b></td>
+			 				<td><div id="moviedetails_countries" class="countries"></div></td>
+			 			</tr>
+			 			<tr>
+			 				<td><b><em>Plot</em></b></td>
+			 				<td><div id="moviedetails_plot" class="plot"></div></td>
+			 			</tr>
+ 					</table>
+  				</td>
+  				<td>
+  					<table>
+  						<tr>
+  							<td><div id="moviedetails_posterimage" class="posterimage"></div></td>
+  						</tr>
+  					</table>
+  				</td>
+  			</tr>
+  		</table> 		       	
+    </div>
+    <div class="buttons">
+  		<span class="button"><input type="button" value="Close" onclick="DialogBox.instance().close()"></span>
+  	</div>
+  </div>
+  			
+
+{% endblock %}
+
+{% block footer %}
+  <script src="/static/javascript/helperfunctions.js" type="text/javascript"></script>
+{% endblock %}
