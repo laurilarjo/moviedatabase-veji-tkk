@@ -1,5 +1,5 @@
 # Veji Multimedia Database
-by Joona & Lauri. TKK:n ohjelmoinnin harjoitustyö marraskuussa 2018.
+by Joona & Lauri. TKK:n ohjelmoinnin harjoitustyö marraskuussa 2008.
 
 ## Ohjelman kuvaus
 - kyseessä on oma aihe, joka vastaa laajudeltaan muita harjoitustyöaiheita
