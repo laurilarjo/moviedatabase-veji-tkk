@@ -1,6 +1,10 @@
 # Veji Multimedia Database
 by Joona & Lauri. TKK:n ohjelmoinnin harjoitustyö marraskuussa 2008.
 
+## Ajallinen konteksti
+IMDB oli suosittu elokuvien tietokanta, mutta omien lisäysten, listojen jne tekeminen oli vielä hyvin rajoitettua. Erilliset desktop-sovellukset omien elokuvakirjastojen hallintaan olivat yleisiä, ja ne yleensä skreippasivat tiedot IMDB:stä.
+Autocomplete oli uutta hottia, Google oli jo testannut sitä mutta se ei ollut vielä käytössä (Google Suggest tuli elokuussa 2008 käyttöön). Tämän ohjelman UI-ratkaisussa rakensimme nopean cachen, jota autocomplete hyödynsi ja pystyimme näyttämään käyttäjälle ehdotuksia tämän kirjoittaessa.
+
 ## Ohjelman kuvaus
 - kyseessä on oma aihe, joka vastaa laajudeltaan muita harjoitustyöaiheita
 - ohjelma toimii Googlen AppEngine -palvelimella ja hyädyntää Pythonin lisäksi seuraavia
